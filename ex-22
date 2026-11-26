@@ -1,0 +1,28 @@
+[General]
+network = MultiCellHandover
+sim-time-limit = 60s
+**.numUe = 3
+ 
+# UE mobility: straight line through the three cells
+*.ue[*].mobility.typename = "LinearMobility"
+*.ue[*].mobility.initialX = 50m
+*.ue[*].mobility.initialY = 200m
+*.ue[*].mobility.initialMovementHeading = 0deg
+*.ue[*].mobility.speed = ${speed = 5, 20, 40} mps
+ 
+# handover enabled in UEs and base stations
+**.enableHandover = true
+ 
+# downlink UDP traffic: server -> every UE
+*.server.numApps = 3
+*.server.app[*].typename = "UdpBasicApp"
+*.server.app[0].destAddresses = "ue[0]"
+*.server.app[1].destAddresses = "ue[1]"
+*.server.app[2].destAddresses = "ue[2]"
+*.server.app[*].destPort = 1000
+*.server.app[*].messageLength = 1000B
+*.server.app[*].sendInterval = 10ms
+*.ue[*].numApps = 1
+*.ue[*].app[0].typename = "UdpSink"
+*.ue[*].app[0].localPort = 1000
+
