@@ -1,0 +1,33 @@
+[General]
+network = ManetNet
+sim-time-limit = 200s
+repeat = 5
+*.numHosts = ${n = 10, 20, 30}
+ 
+# mobility
+*.host[*].mobility.typename = "RandomWaypointMobility"
+*.host[*].mobility.speed = uniform(1mps, 10mps)
+*.host[*].mobility.waitTime = 2s
+*.host[*].mobility.initFromDisplayString = false
+ 
+# 802.11 ad hoc
+*.host[*].wlan[*].opMode = "g(erp)"
+*.host[*].wlan[*].radio.transmitter.power = 2mW
+ 
+# traffic
+*.host[0].numApps = 1
+*.host[0].app[0].typename = "UdpBasicApp"
+*.host[0].app[0].destAddresses = "host[9]"
+*.host[0].app[0].destPort = 5000
+*.host[0].app[0].messageLength = 512B
+*.host[0].app[0].sendInterval = 100ms
+*.host[9].numApps = 1
+*.host[9].app[0].typename = "UdpSink"
+*.host[9].app[0].localPort = 5000
+ 
+[Config AODV]
+*.host[*].typename = "AodvRouter"
+ 
+[Config DSDV]
+*.host[*].typename = "DsdvRouter"
+
