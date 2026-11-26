@@ -1,0 +1,17 @@
+# protocol hierarchy of a capture
+tshark -r trace.pcap -q -z io,phs
+ 
+# GSM (A interface / MAP / SMS)
+tshark -r gsm.pcap -Y "gsm_a.dtap || gsm_a.bssmap || gsm_map || gsm_sms"
+ 
+# GTP user plane and control plane
+tshark -r gtp.pcap -Y "gtp || gtpv2" -T fields -e frame.number -e ip.src -e ip.dst -e gtp.teid -e gtp.message
+ 
+# S1AP (LTE attach)
+tshark -r s1ap.pcap -Y "s1ap" -T fields -e frame.number -e frame.time_relative -e s1ap.procedureCode
+ 
+# NGAP (5G registration and PDU session)
+tshark -r ngap.pcap -Y "ngap" -T fields -e frame.number -e frame.time_relative -e ngap.procedureCode
+ 
+# SCTP associations carrying S1AP / NGAP
+tshark -r trace.pcap -q -z conv,sctp
