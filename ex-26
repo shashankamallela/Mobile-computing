@@ -1,0 +1,17 @@
+package captureexample;
+ 
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.node.ethernet.Eth100M;
+import inet.node.inet.Router;
+import inet.node.inet.StandardHost;
+ 
+network CaptureNet
+{
+    submodules:
+        configurator: Ipv4NetworkConfigurator;
+        client: StandardHost;
+        router: Router;
+        server: StandardHost;
+    connections:
+        client.ethg++ <--> Eth100M <--> router.ethg++;
+        router.ethg++ <--> Eth100M <--> server.ethg++;
