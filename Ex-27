@@ -1,0 +1,22 @@
+import glob, re, shlex, collections
+ 
+METRICS = ['packetReceived:count', 'endToEndDelay:mean']
+data = collections.defaultdict(lambda: collections.defaultdict(list))
+ 
+for fn in glob.glob('results/*.sca'):
+    num_ue = None
+    for line in open(fn):
+        if line.startswith('attr iterationvars '):
+            m = re.search(r'\$numUe=(\d+)', line)
+            if m:
+                num_ue = int(m.group(1))
+        elif line.startswith('scalar ') and num_ue is not None:
+            parts = shlex.split(line)
+            module, name, value = parts[1], parts[2], float(parts[3])
+            if name in METRICS:
+                data[num_ue][name].append(value)
+ 
+print('{:>6}{:>26}{:>22}'.format('UEs', 'Mean packets received', 'Mean delay (s)'))
+for n in sorted(data):
+    rx = sum(data[n]['packetReceived:count']) / max(len(data[n]['packetReceived:count']), 1)
+    dl = sum(data[n]['endToEndDelay:mean']) / max(len(data[n]['endToEndDelay:mean']), 1)
