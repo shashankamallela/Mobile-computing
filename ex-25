@@ -1,0 +1,25 @@
+[General]
+network = MobileIPDemo
+sim-time-limit = 120s
+ 
+# mobile node moves from home AP to foreign AP
+*.mn.mobility.typename = "LinearMobility"
+*.mn.mobility.initialX = 100m
+*.mn.mobility.initialY = 200m
+*.mn.mobility.initialMovementHeading = 0deg
+*.mn.mobility.speed = 5mps
+ 
+# enable Mobile IPv6 functions
+**.hasMipv6 = true
+ 
+# traffic: correspondent node -> mobile node
+*.cn.numApps = 1
+*.cn.app[0].typename = "UdpBasicApp"
+*.cn.app[0].destAddresses = "mn"
+*.cn.app[0].destPort = 1000
+*.cn.app[0].sendInterval = 50ms
+*.cn.app[0].messageLength = 500B
+*.mn.numApps = 1
+*.mn.app[0].typename = "UdpSink"
+*.mn.app[0].localPort = 1000
+
